@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = {
   mode: 'development',
   entry: './src/index.ts',
@@ -18,8 +20,9 @@ module.exports = {
     filename: 'index.js'
   },
   devServer: {
-    contentBase: "dist",
-    watchContentBase: true,
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
     open: true,
     port: 9000
   }
