@@ -1,17 +1,19 @@
-import { Madoi, Share, GetState, SetState } from "./madoi/madoi";
+import { Madoi, GetState, SetState, ClassName, Distributed, ChangeState } from "madoi-client";
+import { madoiKey, madoiUrl } from "./keys";
 
 window.addEventListener("load", ()=>{
     // Chatクラスのインスタンスを作成する。
     const chat = new Chat("chatForm", "chatLogDiv");
 
     // Madoiライブラリを使ってサービスに接続する。引数の"room/"以降はセッション識別文字列。
-    const m = new Madoi(`wss://fungo.kcg.edu/madoi-20220920/rooms/chat-o3i4sdf667alskdjj`);
+    const m = new Madoi(`${madoiUrl}/chat-o3i4sdf667alskdjj`, madoiKey);
 
     // chatインスタンスを登録する。共有に関するメソッドの情報はデコレータ(@???)から取得される。
     m.register(chat);
 });
 
 interface Log {name: string, message: string};
+@ClassName("Chat")
 class Chat{
     private chatLogDiv: HTMLDivElement;
     private logTemplate: HTMLTemplateElement;
@@ -37,7 +39,8 @@ class Chat{
     }
 
     // ログ領域にチャットメッセージを追加するメソッド
-    @Share({maxLog: 1000})
+    @Distributed()
+    @ChangeState()
     addLog(name: string, message: string){
         this.appendLog(name, message);
         this.chatLogDiv.scrollTop = this.chatLogDiv.scrollHeight;

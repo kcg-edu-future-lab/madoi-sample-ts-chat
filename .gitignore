@@ -1,1 +1,3 @@
 node_modules
+src/keys.ts
+dist/index.js
